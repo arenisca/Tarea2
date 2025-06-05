@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include <utility>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <bitset>
 
@@ -22,46 +23,51 @@ using namespace std;
 //   // Cerramos el stream sobre el cual estábamos escribiendo
 //   fclose(fout);
 // }
-void guardar_arreglo(const char *fname, const std::bitset<32> *arreglo) {
-    FILE *archivo = fopen(fname, "wb"); 
+void guardar_arreglo(const char *fname, const std::bitset<32> *arreglo, int n) {
+    //FILE *archivo = fopen(fname, "wb"); 
+    // Guardar en archivo binario
+    std::ofstream archivo(fname, std::ios::binary);
     if (!archivo) {
-        std::cout << "Error al abrir el archivo." << std::endl;
-        exit(EXIT_FAILURE);
+        std::cerr << "Error al abrir el archivo." << std::endl;
+        return;
     }
-    // Escribimos los primeros n enteros de arreglo arr en el archivo abierto en
-    // fout
-    fwrite(arreglo, sizeof(int32_t), size_t(arreglo), archivo);
+    // Primero escribimos el número de elementos
+    archivo.write(reinterpret_cast<const char*>(&n), sizeof(n));
+    // Luego escribimos los datos
+    for (int i = 0; i < n; ++i) {
+        unsigned long valor = arreglo[i].to_ulong();
+        archivo.write(reinterpret_cast<const char*>(&valor), sizeof(valor));
+    }
 
-    // Cerramos el stream sobre el cual estábamos escribiendo
-    fclose(archivo);
+    archivo.close();
+    std::cout << "Archivo guardado como "<< fname << std::endl;
+
 }
 
 // Leemos un arreglo de n enteros desde un archivo
-std::vector<int32_t> cargar_arreglo(const char *fname, int *n) {
-    FILE *archivo = fopen(fname, "rb");    
+std::bitset<32>* cargar_arreglo(const char *fname, int& n) {
+    //FILE *archivo = fopen(fname, "rb");    
+    std::ifstream archivo(fname, std::ios::binary);
+
     if (!archivo) {
-        std::cerr << "Error al abrir el archivo." << std::endl;
-        return {};
+        std::cout << "Error al abrir el archivo: " << fname << std::endl;
+        return nullptr; // Retorna vector vacío en caso de error
     }
+    archivo.read(reinterpret_cast<char*>(&n), sizeof(n));
 
-    // Movemos el puntero que apunta al inicio del archivo hasta el final
-    fseek(archivo, 0L, SEEK_END);
-    // Recuperamos la posición (en cantidad de bytes) del puntero
-    n = ftell(archivo);
-    // Calculamos la cantidad de enteros del arreglo
-    n /= sizeof(int);
-    // Restablecemos el puntero al inicio
-    fseek(archivo, 0L, SEEK_SET);
+    if (n<=0){ std::cout << "Número inválido de elementos."<< std::endl;}
 
-    // Reservamos espacio para *n enteros
-    std::bitset<32>* arreglo = new std::bitset<32>[n];
-
-    // Calcular cantidad de enteros (cada uno ocupa 4 bytes)
-    size_t numEnteros = tamanoBytes / sizeof(int32_t);
-    std::vector<int32_t> arreglo(numEnteros);
-
-    // Leer datos binarios
-    fread(arreglo, numEnteros,n,archivo)
+    // creamos el arreglo
+    std::bitset<32>* arreglo=new std::bitset<32>[n];
+    unsigned long valor;
+    for (int i = 0; i < n; ++i) {
+        if (!archivo.read(reinterpret_cast<char*>(&valor), sizeof(valor))) {
+            cerr << "Error al leer el elemento " << i << endl;
+            delete[] arreglo; // Liberamos memoria en caso de error
+            return nullptr;
+        }
+        arreglo[i] = std::bitset<32>(valor);
+    }
     archivo.close();
 
     return arreglo;
@@ -71,12 +77,15 @@ std::vector<int32_t> cargar_arreglo(const char *fname, int *n) {
 int main(int argc, char **argv) {
   
     if(argc < 2) {
-        cout << "Uso: " << argv[0] << " <archivo de salida> error" << endl;
+        cout << "Uso: " << argv[0] << "<n.ro elementos> <archivo de salida>" << endl;
         return EXIT_FAILURE;
     }
 
     int n = atoi(argv[1]); // Almacenará la cantidad de elementos
-    
+    if(n<=0) {
+        std::cout <<"El número de elementos debe ser positivo"<<std::endl;
+        return EXIT_FAILURE;
+    }
     // Llenamos el arreglo a ordenar con valores aleatorios 
     std::bitset<32>* arreglo = new std::bitset<32>[n];
     
@@ -85,16 +94,24 @@ int main(int argc, char **argv) {
     }
 
     // Guardamos el arreglo en un archivo
-    guardar_arreglo(argv[2], arreglo);
+    guardar_arreglo(argv[2], arreglo, n);
 
     
     // Leemos un arreglo desde archivo
-    std::bitset<32>* arr2 = cargar_arreglo(argv[2],n);
-    cout << "Arreglo es: " << endl; 
-    for (int i = 0; i < 10 && i < n; i++) {
-        cout << arr2[i] << " ";
+    int n_leidos;
+    std::bitset<32>* arr2 = cargar_arreglo(argv[2], n_leidos);
+    if (arr2 != nullptr) {
+        cout << "Primeros 10 elementos del arreglo leído (" << n_leidos << " elementos totales):" << endl; 
+        for (int i = 0; i < 10 && i < n_leidos; i++) {
+            cout << arr2[i] << " (" << arr2[i].to_ulong() << ")" << endl;
+        }
+        
+        // Liberamos memoria
+        delete[] arr2;
     }
-    
+
+    // Liberamos memoria
+    delete[] arreglo;
 
     return EXIT_SUCCESS;
 }
