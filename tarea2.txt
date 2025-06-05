@@ -1,5 +1,10 @@
 Consiste en comparar tiempo de ejecución de al menos 6 algortimos de ordenamiento
 usando arreglos de enteros de 32 bits.
+////////////////////////////////////////
+Esto representa una primera parte de implementar lo aprendido en progra 1
+abrir un archivo, crear numeros aleatorios y que su representacion en binario sea
+guardada en un archivo.txt tal que el código principal (algoritmo) pueda leerlo
+//////////////////////////////////////
 Estos arreglos deben estar serializados:
 - completamente desordenados
 - ordenados de forma ascendente
@@ -8,6 +13,7 @@ Estos arreglos deben estar serializados:
 En la comparación, como mínimo, deben considerar los siguientes algoritmos 
 
 Insertion sort: Tienen complejidad O(n 2 ) de por caso
+
 Merge sort: Tiene complejidad O(n log n)
             El paso de Conquista de merge-sort consiste en combinar dos secuencias
             ordenadas A y B en una secuencia ordenada conteniendo la unión de los elementos de A y B.
@@ -18,9 +24,17 @@ Merge sort: Tiene complejidad O(n log n)
             para ir comparando y ordenando cada sub arreglo y llegar al tamaño de S original.
             Nota: no es que los divida, utiliza el mismo arreglo pero va a cambiando los valores rank
             
+Quick sort: El peor caso de quick-sort ocurre cuando el pivote es el elemento mínimo o máximo. 
+            De esa manera, L o G tiene tamaño n − 1 y el otro tamaño 0. O(n^2)
+            El tiempo esperado de ejecución es O(n log n)
+            Puede ser implementado in-pleace (no requiere de uso de memoria creando otro arreglo)
 
-Quick sort
-Heap sort
+            Quick sort funciona escogiendo un pivote (un valor aleatorio del arreglo o del inicio/final).
+            Luego se compara este pivote x con todos los elementos antes y después de este, creando una partición:
+            la parte izquierda se ponen los elementos menores y en la derecha los mayores... y así de forma recursiva
+            hasta que el arreglo sea de 1 elemento (el cual irá a la izquierda o derecha del pivote)
+
+Heap sort: Complejidad garantizada O(n log n) 
 Función de sorting implementada en la biblioteca estándar de C++
 Otro algoritmo de ordenamiento que encuentren. Puede ser una fusión de los anteriores.
 
