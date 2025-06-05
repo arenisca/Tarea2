@@ -1,0 +1,33 @@
+Consiste en comparar tiempo de ejecución de al menos 6 algortimos de ordenamiento
+usando arreglos de enteros de 32 bits.
+Estos arreglos deben estar serializados:
+- completamente desordenados
+- ordenados de forma ascendente
+- de forma descendente
+- otros casos (ej. parcialmente ordenados)
+En la comparación, como mínimo, deben considerar los siguientes algoritmos 
+
+Insertion sort: Tienen complejidad O(n 2 ) de por caso
+Merge sort: Tiene complejidad O(n log n)
+            El paso de Conquista de merge-sort consiste en combinar dos secuencias
+            ordenadas A y B en una secuencia ordenada conteniendo la unión de los elementos de A y B.
+            Combinar dos secuencias ordenadas, cada una de n/2 elementos e implementadas con listas
+            ligadas dobles tarda O(n).
+            Como este algotirmo funciona de manera recursiva, la primera parte divide el arreglo S 
+            en 2 sub arreglos de n/2 valores de forma recursiva hasta que exista 1 valor en cada arreglo
+            para ir comparando y ordenando cada sub arreglo y llegar al tamaño de S original.
+            Nota: no es que los divida, utiliza el mismo arreglo pero va a cambiando los valores rank
+            
+
+Quick sort
+Heap sort
+Función de sorting implementada en la biblioteca estándar de C++
+Otro algoritmo de ordenamiento que encuentren. Puede ser una fusión de los anteriores.
+
+g++ archivo.cpp -o nombrejecutable 
+./nombrejecutable nro de elementos para el arreglo 
+
+en caso de tener los distintos experimentos para los 6 algoritmos, podemos hacer un archivo .sh 
+que ejecute cada función de algoritmos .cpp para distintos tamaños de arreglos
+
+bash resultados.sh > valores_grafica.csv 
