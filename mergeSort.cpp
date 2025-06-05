@@ -3,17 +3,18 @@
 #include <vector>
 #include <cstdlib>
 #include <chrono>
+#include <bitset>
 // por mientras voy a trabajar con arreglos de enteros no serializados
-void merge(int* arr, int* left, int leftSize, int* right, int rightSize, int inicio) {
+void merge(std::bitset<32>* arr, std::bitset<32>* left, int leftSize, std::bitset<32>* right, int rightSize, int inicio) {
     int i = 0, j = 0, k = inicio;
     while (i < leftSize && j < rightSize) {
-        arr[k++] = (left[i] <= right[j]) ? left[i++] : right[j++];
+        arr[k++] = (left[i].to_ulong() <= right[j].to_ulong()) ? left[i++] : right[j++];
     }
     while (i < leftSize) arr[k++] = left[i++];
     while (j < rightSize) arr[k++] = right[j++];
 }
 // Recursive Merge Sort function
-void mergeSort(int* arr, int inicio, int fin) {
+void mergeSort(std::bitset<32>* arr, int inicio, int fin) {
     if (inicio >= fin) return;
     int mitad = inicio + (fin-inicio) / 2;
     // Sort lado izq
@@ -22,7 +23,8 @@ void mergeSort(int* arr, int inicio, int fin) {
     mergeSort(arr, mitad + 1, fin);
 
     // creamos arreglos para izq y derecha
-    int *leftArr=new int[mitad-inicio+1],*rightArr= new int[fin -mitad];
+    std::bitset<32>* leftArr= new std::bitset<32>[mitad-inicio+1];
+    std::bitset<32>* rightArr= new std::bitset<32>[fin -mitad];
     // distribuimos los valores
     for (int i = 0; i < mitad-inicio +1; i++) leftArr[i] = arr[inicio + i];
     for (int i = 0; i < fin-mitad; i++) rightArr[i] = arr[mitad + 1 + i];
@@ -30,27 +32,54 @@ void mergeSort(int* arr, int inicio, int fin) {
     merge(arr,leftArr,mitad-inicio+1,rightArr, fin-mitad, inicio); 
     
 }
+// carga de archivo del arreglo serializado
+std::bitset<32>* cargar_arreglo(const char *fname, int& n) {   
+    std::ifstream archivo(fname, std::ios::binary);
+
+    if (!archivo) {
+        std::cout << "Error al abrir el archivo: " << fname << std::endl;
+        return nullptr; // Retorna vector vacío en caso de error
+    }
+    archivo.read(reinterpret_cast<char*>(&n), sizeof(n));
+
+    if (n<=0){ std::cout << "Número inválido de elementos."<< std::endl;}
+
+    // creamos el arreglo
+    std::bitset<32>* arreglo=new std::bitset<32>[n];
+    unsigned long valor;
+    for (int i = 0; i < n; ++i) {
+        if (!archivo.read(reinterpret_cast<char*>(&valor), sizeof(valor))) {
+            std::cout << "Error al leer el elemento " << i << std::endl;
+            delete[] arreglo; // Liberamos memoria en caso de error
+            return nullptr;
+        }
+        arreglo[i] = std::bitset<32>(valor);
+    }
+    archivo.close();
+
+    return arreglo;
+}
 
 
 int main(int argc, char** argv) {
     // Verificación (opcional)
      // Si no hay suficientes argumentos, terminamos la ejecución
     if(argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " <cantidad de elementos>" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " <archivo serializado.bin>" << std::endl;
         exit(1);
     }
-    int n = atoi(argv[1]); // Almacenará la cantidad de elementos
-    
-    // Llenamos el arreglo a ordenar con valores aleatorios 
-    int *arreglo = new int[n];
-    for(int i=0; i < n; i++) {
-        arreglo[i] = rand() % 1000;
+    // Leemos un arreglo desde archivo
+    int n;
+    std::bitset<32>* arreglo = cargar_arreglo(argv[1], n);
+    if(n <= 0 || arreglo == nullptr) {
+        std::cerr << "Error: Arreglo vacío o inválido" << std::endl;
+        return EXIT_FAILURE;
     }
     
     // medimos el tiempo que tarda insertSort
     auto start = std::chrono::high_resolution_clock::now();
     
-    mergeSort(arreglo,0,n-1);
+    mergeSort(arreglo,0,n-1); // el arreglo, inicio, final desde donde se quiera ordenar
 
     // medimos el tiempo transcurrido aquí por segunda vez
     auto end = std::chrono::high_resolution_clock::now();
@@ -67,7 +96,7 @@ int main(int argc, char** argv) {
     // imprimimos los primeros 10 elementos para saber si están en orden
     std::cout << "Primeros 10 elementos ordenados: ";
     for (int i = 0; i < 10 && i < n; i++) {
-        std::cout << arreglo[i] << " ";
+        std::cout << arreglo[i] << " "<< " (" << arreglo[i].to_ulong() << ")" << std::endl;
     }
 
     return 0;
