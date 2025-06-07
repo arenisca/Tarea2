@@ -4,10 +4,15 @@
 #include <chrono>
 #include <bitset>
 #include "priorityQueue.h"
+/**
+ * @brief Heap Sort implementado se basa en el uso de una cola de prioridad "priorityQueue". 
+ * El código utiliza un "heap" con estructura de árbol binario que va actualizandose dependiendo de la comparación entre nodos padre-hijo. 
+ * Mientras se van insertando los valores en el heap, se usa "swap" para intercambiar los valores. 
+ * Lo mismo ocurre al extraer el primer elemento de la cola de prioridad (extractPriority). 
+ * Este método está basado en lo implementado en el archivo heapsort_v1 visto en el ramo.
+ */
 
-// Leemos un arreglo de n enteros desde un archivo
 std::bitset<32>* cargar_arreglo(const char *fname, int& n) {
-    //FILE *archivo = fopen(fname, "rb");    
     std::ifstream archivo(fname, std::ios::binary);
 
     if (!archivo) {
@@ -34,17 +39,14 @@ std::bitset<32>* cargar_arreglo(const char *fname, int& n) {
     return arreglo;
 }
 
-
 int main(int argc, char** argv) {
-    // Verificación (opcional)
-     // Si no hay suficientes argumentos, terminamos la ejecución
     if(argc < 2) {
         std::cout << "Usage: " << argv[0] << " <archivo de elementos .bin>" << std::endl;
         return EXIT_FAILURE;
     }
     
-    // Leemos un arreglo desde archivo
-    int n;
+    // Leemos un arreglo desde archivo y guardamos el tamaño del arreglo en "n"
+    int n; 
     std::bitset<32>* arreglo = cargar_arreglo(argv[1], n);
     if(n <= 0 || arreglo == nullptr) {
         std::cerr << "Error: Arreglo vacío o inválido" << std::endl;
@@ -53,7 +55,7 @@ int main(int argc, char** argv) {
     
     // medimos el tiempo que tarda insertSort
     auto start = std::chrono::high_resolution_clock::now();
-    // Etapa 1: Añadimos todos los valores a la cola de prioridad
+    // Etapa 1: Añadimos todos los valores del arreglo a la cola de prioridad pq
     priorityQueue pq;
     for(int i=0; i < n; i++) {
         pq.insert(arreglo[i]);
@@ -72,13 +74,6 @@ int main(int argc, char** argv) {
 
     // Imprimimos el resultado
     std::cout << argv[0] << ";\n" << n << ";" << running_time << std::endl;
-  
-
-    //imprimimos los primeros 10 elementos para saber si están en orden
-    std::cout << "Primeros 50 elementos ordenados: ";
-    for (int i = 0; i < 50 && i < n; i++) {
-        std::cout << arreglo[i] << " "<< " (" << arreglo[i].to_ulong() << ")" << std::endl;
-    }
-
+ 
     return 0;
 }

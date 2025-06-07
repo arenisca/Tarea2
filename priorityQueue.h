@@ -61,16 +61,16 @@ public:
     }
 
     std::bitset<32> getPriority() {
-        //se retorna la raiz
+        //se retorna la raíz
         return heap[0];
     }
 
     std::bitset<32> extractPriority() {
-        //se intercambia la raiz con el ultimo elemento y se elimina el ultimo elemento
+        //se intercambia la raíz con el penúltimo elemento y se elimina el último elemento
         std::bitset<32> priority = heap[0];
         heap[0] = heap[heap.size() - 1];
         heap.pop_back();
-        //Luego se llama hepDown para reajustar la cola de prioridad
+        //Luego se llama heapDown para reajustar la cola de prioridad
         heapDown(0);
         return priority;
     }
