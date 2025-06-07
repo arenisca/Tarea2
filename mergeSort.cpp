@@ -4,7 +4,22 @@
 #include <cstdlib>
 #include <chrono>
 #include <bitset>
-// por mientras voy a trabajar con arreglos de enteros no serializados
+
+/**
+ * @brief mergeSort es el método que se encargará de dividir el arreglo en dos mitades: una izquierda y otra derecha. 
+ * Mientras los arreglos sigan teniendo más de dos elementos, se dividirá cada uno en otros dos sub arreglos de forma recursiva. 
+ * @brief merge es el paso de conquista, cada uno de los sub arreglos se irá ordenando hasta unirse y así hasta llegar a ordenar y fusionar
+ * los dos primeros sub arreglos. Como lo vimos en clase, puede ser visto como un arbol, donde los sub arreglos son las hojas, hasta llegar 
+ * a la raíz del árbol (el arreglo original)
+ * @param arr es el arreglo raíz desde donde comenzaremos a dividir 
+ * @param inicio es la posición o índice de inicio del arreglo, o sub arreglo con respecto al arreglo desde donde se dividió
+ * @param fin posición o índice de término un arreglo o sub arreglo
+ * @param left sub arreglo izquierdo de la división
+ * @param right sub arreglo derecho de la división
+ * @param leftSize tamaño del sub arreglo izquierdo
+ * @param rightSize tamaño del sub arreglo derecho
+ */
+
 void merge(std::bitset<32>* arr, std::bitset<32>* left, int leftSize, std::bitset<32>* right, int rightSize, int inicio) {
     int i = 0, j = 0, k = inicio;
     while (i < leftSize && j < rightSize) {
@@ -13,7 +28,7 @@ void merge(std::bitset<32>* arr, std::bitset<32>* left, int leftSize, std::bitse
     while (i < leftSize) arr[k++] = left[i++];
     while (j < rightSize) arr[k++] = right[j++];
 }
-// Recursive Merge Sort function
+// Merge Sort recursiva
 void mergeSort(std::bitset<32>* arr, int inicio, int fin) {
     if (inicio >= fin) return;
     int mitad = inicio + (fin-inicio) / 2;
@@ -22,10 +37,10 @@ void mergeSort(std::bitset<32>* arr, int inicio, int fin) {
     // Sort lado derecho
     mergeSort(arr, mitad + 1, fin);
 
-    // creamos arreglos para izq y derecha
+    // creamos arreglos para izquierda y derecha
     std::bitset<32>* leftArr= new std::bitset<32>[mitad-inicio+1];
     std::bitset<32>* rightArr= new std::bitset<32>[fin -mitad];
-    // distribuimos los valores
+    // distribuimos los valores del arreglo en los subarreglos
     for (int i = 0; i < mitad-inicio +1; i++) leftArr[i] = arr[inicio + i];
     for (int i = 0; i < fin-mitad; i++) rightArr[i] = arr[mitad + 1 + i];
     // aplicamos la función merge que ordenará los arreglos hasta fusionarlos
@@ -60,11 +75,8 @@ std::bitset<32>* cargar_arreglo(const char *fname, int& n) {
     return arreglo;
 }
 
-
 int main(int argc, char** argv) {
-    // Verificación (opcional)
-     // Si no hay suficientes argumentos, terminamos la ejecución
-    if(argc < 2) {
+    if(argc < 1) {
         std::cerr << "Usage: " << argv[0] << " <archivo serializado.bin>" << std::endl;
         exit(1);
     }
@@ -78,9 +90,7 @@ int main(int argc, char** argv) {
     
     // medimos el tiempo que tarda insertSort
     auto start = std::chrono::high_resolution_clock::now();
-    
-    mergeSort(arreglo,0,n-1); // el arreglo, inicio, final desde donde se quiera ordenar
-
+    mergeSort(arreglo,0,n-1); 
     // medimos el tiempo transcurrido aquí por segunda vez
     auto end = std::chrono::high_resolution_clock::now();
 
@@ -91,13 +101,6 @@ int main(int argc, char** argv) {
 
     // Imprimimos el resultado
     std::cout << argv[0] << ";\n" << n << ";" << running_time << std::endl;
-  
-
-    // imprimimos los primeros 10 elementos para saber si están en orden
-    std::cout << "Primeros 10 elementos ordenados: ";
-    for (int i = 0; i < 10 && i < n; i++) {
-        std::cout << arreglo[i] << " "<< " (" << arreglo[i].to_ulong() << ")" << std::endl;
-    }
 
     return 0;
 }
