@@ -1,6 +1,12 @@
 #include "../include/librerias.hpp"
 #include "../include/interfaz_menu.hpp"
 #include "../include/cargar_arreglo.hpp"
+#include "../include/creador_csv.hpp"
+
+// comando para compilar:
+// g++ -I../include insertionSort.cpp interfaz_menu.cpp cargar_arreglo.cpp creador_csv.cpp -o insertionSort
+//comando para ejecutar:
+// .\insertionSort.exe
 
 bool esta_ordenado(std::bitset<32>* arr, int n) {
     for (int i = 1; i < n; ++i) {
@@ -13,9 +19,11 @@ bool esta_ordenado(std::bitset<32>* arr, int n) {
 
 void insertion_sort(std::bitset<32>* arr, int n) {
     for (int i = 1; i < n; ++i) {
-        std::bitset<32> clave = arr[i];
+        const uint32_t clave_val = arr[i].to_ulong(); 
+        const std::bitset<32> clave = arr[i];        
         int j = i - 1;
-        while (j >= 0 && arr[j].to_ulong() > clave.to_ulong()) {
+        
+        while (j >= 0 && arr[j].to_ulong() > clave_val) {
             arr[j + 1] = arr[j];
             j--;
         }
@@ -28,18 +36,6 @@ int main() {
     int n;
     double tiempo_total = 0;
     std::vector<double> tiempos_individuales;
-
-    std::ofstream out(opciones.ruta_csv);
-    if (!out) {
-        std::cerr << "No se pudo crear el archivo de salida.\n";
-        return 1;
-    }
-
-    out << std::fixed << std::setprecision(7);
-    out << "Algoritmo;InsertionSort\n";
-    out << "Tamaño;" << opciones.tam << "\n";
-    out << "Orden;" << opciones.ord << "\n"; 
-    out << "Repeticiones;" << opciones.repeticiones << "\n";
 
     for (int i = 0; i < opciones.repeticiones; ++i) {
         std::bitset<32>* arreglo = cargar_arreglo(opciones.nombre_archivo, n);
@@ -63,15 +59,10 @@ int main() {
         delete[] arreglo;
     }
 
-    double tiempo_promedio = tiempo_total / opciones.repeticiones;
-    out << "Tiempo total;" << tiempo_total << "s\n";
-    out << "Tiempo promedio;" << tiempo_promedio << "s\n";
-    out << "Tiempos individuales (s):\n";
-    for (size_t i = 0; i < tiempos_individuales.size(); ++i) {
-        out << "Ejecución " << (i + 1) << ";" << tiempos_individuales[i] << "\n";
-    }
+    crear_csv_resultados(opciones.ruta_csv, opciones, tiempos_individuales, tiempo_total);
 
-    out.close();
+    std::cout << "Ordenamiento completado con exito.\n";
     std::cout << "Resultados guardados en: " << opciones.ruta_csv << "\n";
+
     return 0;
 }

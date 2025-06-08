@@ -7,8 +7,9 @@ struct OpcionesMenu {
     std::string nombre_archivo;
     std::string ruta_csv;
     int repeticiones;
-    std::string tam;  // nuevo
-    std::string ord;  // nuevo
+    std::string tam;
+    std::string ord;
+    std::string maquina;  
 };
 
 OpcionesMenu mostrar_menu();
