@@ -1,9 +1,6 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <chrono>
-#include <bitset>
-#include "priorityQueue.h"
+#include "../include/librerias.hpp"
+#include "../include/priorityQueue.hpp"      
+
 /**
  * @brief Heap Sort implementado se basa en el uso de una cola de prioridad "priorityQueue". 
  * El código utiliza un "heap" con estructura de árbol binario que va actualizandose dependiendo de la comparación entre nodos padre-hijo. 

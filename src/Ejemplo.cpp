@@ -1,8 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <chrono>
-#include <bitset>
+#include "../include/librerias.hpp"
 
 std::vector<int32_t> leerArchivo(const std::string& nombreArchivo) {
     std::ifstream archivo(nombreArchivo, std::ios::binary);

@@ -1,10 +1,5 @@
-#include <cstdio>
-#include <cstdlib>
-#include <utility>
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <bitset>
+#include "../include/librerias.hpp"
+
 /**
  * @authors 
  * Valentina Serón

@@ -1,9 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <cstdlib>
-#include <chrono>
-#include <bitset>
+#include "../include/librerias.hpp"
 
 /**
  * @brief mergeSort es el método que se encargará de dividir el arreglo en dos mitades: una izquierda y otra derecha. 
