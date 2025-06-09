@@ -3,6 +3,15 @@
 #include "../include/cargar_arreglo.hpp"
 #include "../include/creador_csv.hpp"
 
+/*
+comandos para compilar:
+g++ -I../include mergeSort.cpp interfaz_menu.cpp cargar_arreglo.cpp creador_csv.cpp -o mergeSort    
+c++ -I../include mergeSort.cpp interfaz_menu.cpp cargar_arreglo.cpp creador_csv.cpp -o mergeSort
+cpp -I../include mergeSort.cpp interfaz_menu.cpp cargar_arreglo.cpp creador_csv.cpp -o mergeSort
+comando para ejecutar:
+.\mergeSort.exe
+*/
+
 /**
  * @brief Función merge para combinar dos subarreglos ordenados
  */
@@ -77,6 +86,9 @@ int main() {
 
         if (!esta_ordenado(arreglo, n)) {
             std::cerr << "Error: El arreglo no quedó ordenado en la ejecución " << i + 1 << "\n";
+            delete[] arreglo;
+            --i;
+            continue;
         }
 
         delete[] arreglo;

@@ -4,7 +4,9 @@
 #include "../include/creador_csv.hpp"
 
 // comando para compilar:
-// g++ -I../include insertionSort.cpp interfaz_menu.cpp cargar_arreglo.cpp creador_csv.cpp -o insertionSort
+//  g++ -I../include insertionSort.cpp interfaz_menu.cpp cargar_arreglo.cpp creador_csv.cpp -o insertionSort
+//  c++ -I../include insertionSort.cpp interfaz_menu.cpp cargar_arreglo.cpp creador_csv.cpp -o insertionSort
+//  cpp -I../include insertionSort.cpp interfaz_menu.cpp cargar_arreglo.cpp creador_csv.cpp -o insertionSort
 //comando para ejecutar:
 // .\insertionSort.exe
 
@@ -54,6 +56,9 @@ int main() {
 
         if (!esta_ordenado(arreglo, n)) {
             std::cerr << "Error: El arreglo no quedó ordenado en la ejecución " << i + 1 << "\n";
+            delete[] arreglo;
+            --i;
+            continue;
         }
 
         delete[] arreglo;

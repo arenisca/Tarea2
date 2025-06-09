@@ -11,5 +11,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <utility>
+#include <math.h>
+#include <algorithm>
 
 #endif // LIBRERIAS_HPP

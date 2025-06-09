@@ -3,6 +3,15 @@
 #include "../include/cargar_arreglo.hpp"
 #include "../include/creador_csv.hpp"
 
+/*
+Comandos para compilar:
+g++ -I../include quickSort.cpp interfaz_menu.cpp cargar_arreglo.cpp creador_csv.cpp -o quickSort
+c++ -I../include quickSort.cpp interfaz_menu.cpp cargar_arreglo.cpp creador_csv.cpp -o quickSort
+cpp -I../include quickSort.cpp interfaz_menu.cpp cargar_arreglo.cpp creador_csv.cpp -o quickSort
+comando para ejecutar:
+.\quickSort.exe
+*/
+
 /**
  * @brief Función para particionar el arreglo usando el pivote.
  * 
@@ -80,6 +89,9 @@ int main() {
 
         if (!esta_ordenado(arreglo, n)) {
             std::cerr << "Error: El arreglo no quedó ordenado en la ejecución " << i + 1 << "\n";
+            delete[] arreglo;
+            --i;
+            continue;
         }
 
         delete[] arreglo;
@@ -87,7 +99,7 @@ int main() {
 
     crear_csv_resultados(opciones.ruta_csv, opciones, tiempos_individuales, tiempo_total, "Quick_Sort");
 
-    std::cout << "Ordenamiento completado con éxito.\n";
+    std::cout << "Ordenamiento completado con exito.\n";
     std::cout << "Resultados guardados en: " << opciones.ruta_csv << "\n";
 
     return 0;

@@ -40,34 +40,81 @@ def parse_csv(file_path):
     return data
 
 def select_files(csv_files):
-    """Permite al usuario seleccionar qué archivos graficar"""
+    """Permite al usuario seleccionar qué archivos graficar con validación de entrada"""
     print("\nArchivos CSV encontrados:")
     for i, f in enumerate(csv_files, 1):
         print(f"{i}. {os.path.basename(f)}")
     
-    print("\nSeleccione los archivos a graficar (ej. 1,3 o 1-3 o 'todos'):")
-    selection = input("> ").strip().lower()
-    
-    if selection == 'todos':
-        return csv_files
-    
-    selected = []
-    for part in selection.split(','):
-        if '-' in part:
-            start, end = map(int, part.split('-'))
-            selected.extend(csv_files[start-1:end])
-        else:
-            selected.append(csv_files[int(part)-1])
-    
-    return selected
-
+    while True:
+        print("\nSeleccione los archivos a graficar (Máximo 3) (ej. 1,3 o 1-3 o 1,2,3):")
+        print("Ingrese 'todos' para seleccionar todos los archivos")
+        selection = input("> ").strip().lower()
+        
+        # Caso especial: todos
+        if selection == 'todos':
+            return csv_files
+        
+        # Validar que la selección no esté vacía
+        if not selection:
+            print("Error: No ha ingresado ninguna selección. Intente nuevamente.")
+            continue
+        
+        selected = []
+        valid = True
+        
+        # Procesar cada parte de la selección
+        for part in selection.split(','):
+            part = part.strip()
+            try:
+                if '-' in part:
+                    # Procesar rangos (ej. 1-3)
+                    start, end = map(int, part.split('-'))
+                    if start > end or start < 1 or end > len(csv_files):
+                        print(f"Error: Rango inválido '{part}'. Los números deben estar entre 1 y {len(csv_files)}")
+                        valid = False
+                        break
+                    selected.extend(csv_files[start-1:end])
+                else:
+                    # Procesar números individuales
+                    num = int(part)
+                    if num < 1 or num > len(csv_files):
+                        print(f"Error: Número inválido '{num}'. Debe estar entre 1 y {len(csv_files)}")
+                        valid = False
+                        break
+                    selected.append(csv_files[num-1])
+            except ValueError:
+                print(f"Error: Entrada inválida '{part}'. Debe ser un número o rango de números.")
+                valid = False
+                break
+        
+        # Verificar si hubo errores
+        if not valid:
+            continue
+            
+        # Eliminar duplicados manteniendo el orden
+        selected = list(dict.fromkeys(selected))
+        
+        # Validar cantidad máxima
+        if len(selected) > 3:
+            print(f"Error: Ha seleccionado {len(selected)} archivos. El máximo permitido es 3.")
+            continue
+            
+        # Validar que se seleccionó al menos uno
+        if len(selected) == 0:
+            print("Error: No ha seleccionado ningún archivo válido. Intente nuevamente.")
+            continue
+            
+        return selected
 def plot_results(selected_files):
     """Genera gráficos para los archivos seleccionados con leyendas y metadatos organizados"""
     plt.figure(figsize=(14, 8))
 
     base_colors = ['#1f77b4', '#ff7f0e', '#2ca02c']  # Colores base para puntos
     legend_positions = ['upper left', 'upper center', 'upper right']
-    metadata_positions = [(1.02, 0.98), (1.02, 0.6), (1.02, 0.2)]
+    
+    # Ajustar las posiciones de los cuadros de metadatos para que estén más separados
+    metadata_positions = [(1.02, 0.98), (1.02, 0.65), (1.02, 0.3)]
+    metadata_vertical_spacing = 0.25  # Espacio vertical entre cuadros de metadatos
 
     ax = plt.gca()
 
@@ -111,13 +158,18 @@ def plot_results(selected_files):
             f"Máquina: {data.get('Máquina', 'N/A')}",
             f"Tiempo total: {data.get('Tiempo total', 'N/A')}",
         ]
+        
+        # Ajustar la posición vertical basada en el índice
+        y_pos = 0.98 - (i * metadata_vertical_spacing)
+        
         plt.annotate('\n'.join(metadata),
-                     xy=metadata_positions[i],
+                     xy=(1.02, y_pos),
                      xycoords='axes fraction',
                      fontsize=9,
                      ha='left',
                      va='top',
-                     bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+                     bbox=dict(boxstyle='round', facecolor='white', alpha=0.8,
+                             edgecolor='gray', linewidth=0.5))
 
         # Leyenda individual para cada archivo
         legend_elements = [
@@ -145,10 +197,9 @@ def plot_results(selected_files):
     ax.set_ylabel('Tiempo (segundos)')
     ax.grid(True, alpha=0.3)
 
-    plt.tight_layout()
-    output_file = 'grafico_tiempos.png'
-    plt.savefig(output_file, dpi=300, bbox_inches='tight')
-    print(f"\nGráfico guardado como: {output_file}")
+    # Ajustar los márgenes para dar más espacio a los cuadros de metadatos
+    plt.subplots_adjust(right=0.75 if len(selected_files) > 1 else 0.85)
+    
     plt.show()
 
 def main():
