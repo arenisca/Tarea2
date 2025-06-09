@@ -1,0 +1,10 @@
+Algoritmo;Quick_Sort
+Tamaño;500000
+Orden;desc
+Repeticiones;2
+Máquina;Vale
+Tiempo total;53.8831s
+Tiempo promedio;26.9416s
+Tiempos individuales (s):
+Ejecución 1;25.2267
+Ejecución 2;28.6564
