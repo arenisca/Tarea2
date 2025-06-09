@@ -9,9 +9,10 @@ struct OpcionesMenu {
     int repeticiones;
     std::string tam;
     std::string ord;
-    std::string maquina;  
+    std::string maquina;
+    std::string algoritmo;
 };
 
-OpcionesMenu mostrar_menu();
+OpcionesMenu mostrar_menu(const std::string& algoritmo);
 
 #endif

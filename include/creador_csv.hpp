@@ -7,6 +7,6 @@
 #include "librerias.hpp"
 
 void crear_csv_resultados(const std::string& ruta_csv, const OpcionesMenu& opciones,
-                         const std::vector<double>& tiempos_individuales, double tiempo_total);
+                         const std::vector<double>& tiempos_individuales, double tiempo_total, const std::string& nombre_algoritmo);
 
 #endif
