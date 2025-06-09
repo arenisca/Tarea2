@@ -44,13 +44,15 @@ OpcionesMenu mostrar_menu(const std::string& nombre_algoritmo) {
 
     // Configurar opciones
     OpcionesMenu opciones;
+    opciones.maquina = (opcion_maquina == 1) ? "Lucas" : "Vale"; // Guardamos solo el nombre
     opciones.nombre_archivo = carpeta + "/lcp_" + tamanos[opcion_tam - 1] + "_" + ordenes[opcion_ord - 1] + ".bin";
-    opciones.ruta_csv = "../Resultados_CSV/" + nombre_algoritmo + tamanos[opcion_tam - 1] + "_" + ordenes[opcion_ord - 1] 
-                        + "_" + std::to_string(repeticiones) + "_" + ".csv";
+    opciones.ruta_csv = "../Resultados_CSV/" + opciones.maquina + "/" +
+                    nombre_algoritmo + "_" + tamanos[opcion_tam - 1] + "_" +
+                    ordenes[opcion_ord - 1] + "_" + std::to_string(repeticiones) + ".csv";
     opciones.repeticiones = repeticiones;
     opciones.tam = tamanos[opcion_tam - 1];
     opciones.ord = ordenes[opcion_ord - 1];
-    opciones.maquina = (opcion_maquina == 1) ? "Lucas" : "Vale"; // Guardamos solo el nombre
+    
 
     return opciones;
 }

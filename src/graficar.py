@@ -203,22 +203,39 @@ def plot_results(selected_files):
     plt.show()
 
 def main():
-    csv_dir = '../Resultados_CSV'
+    base_dir = '../Resultados_CSV/'
+    
+    # Paso 1: Selección de carpeta
+    opciones = ['Lucas', 'Vale']
+    print("Seleccione la carpeta de resultados:")
+    for i, nombre in enumerate(opciones, start=1):
+        print(f"{i}. {nombre}")
+    
+    seleccion = input("Ingrese el número correspondiente a la máquina: ")
+    if not seleccion.isdigit() or int(seleccion) not in [1, 2]:
+        print("Selección inválida.")
+        return
+    
+    carpeta_maquina = opciones[int(seleccion) - 1]
+    csv_dir = os.path.join(base_dir, carpeta_maquina)
+
+    # Paso 2: Verificación de existencia y archivos
     if not os.path.exists(csv_dir):
         print(f"Error: No se encontró el directorio {csv_dir}")
         return
-    
+
     csv_files = sorted(glob.glob(os.path.join(csv_dir, '*.csv')))
     if not csv_files:
-        print("No se encontraron archivos CSV para graficar")
+        print("No se encontraron archivos CSV para graficar en la carpeta seleccionada.")
         return
-    
+
+    # Paso 3: Selección de archivos y graficación
     selected_files = select_files(csv_files)
     if not selected_files:
         print("No se seleccionaron archivos válidos")
         return
-    
+
     plot_results(selected_files)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
