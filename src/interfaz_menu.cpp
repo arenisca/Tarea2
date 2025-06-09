@@ -2,7 +2,7 @@
 
 OpcionesMenu mostrar_menu(const std::string& nombre_algoritmo) {
     std::string carpeta = "../archivos_de_prueba";
-    std::vector<std::string> tamanos = {"5000", "50000", "500000"};
+    std::vector<std::string> tamanos = {"5000", "50000", "500000", "5000000"};
     std::vector<std::string> ordenes = {"asc", "desc", "shuffled"};
     std::vector<std::string> maquinas = {
         "Maquina 1 (Lucas)",
