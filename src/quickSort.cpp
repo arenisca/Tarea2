@@ -1,28 +1,43 @@
 #include "../include/librerias.hpp"
-#include "../include/priorityQueue.hpp"
 #include "../include/interfaz_menu.hpp"
 #include "../include/cargar_arreglo.hpp"
 #include "../include/creador_csv.hpp"
 
 /**
- * @brief Heap Sort implementado se basa en el uso de una cola de prioridad "priorityQueue". 
- * El código utiliza un "heap" con estructura de árbol binario que va actualizándose dependiendo de la comparación entre nodos padre-hijo. 
- * Mientras se van insertando los valores en el heap, se usa "swap" para intercambiar los valores. 
- * Lo mismo ocurre al extraer el primer elemento de la cola de prioridad (extractPriority). 
- * Este método está basado en lo implementado en el archivo heapsort_v1 visto en el ramo.
+ * @brief Función para particionar el arreglo usando el pivote.
+ * 
+ * @param arr Arreglo de bitsets.
+ * @param inicio Índice inicial del subarreglo.
+ * @param fin Índice final del subarreglo.
+ * @return int Índice donde quedó ubicado el pivote.
  */
+int particionar(std::bitset<32>* arr, int inicio, int fin) {
+    unsigned long pivote = arr[fin].to_ulong();
+    int i = inicio - 1;
 
-void heapSort(std::bitset<32>* arreglo, int n) {
-    priorityQueue pq;
-
-    // Etapa 1: Insertar elementos en la cola de prioridad
-    for (int i = 0; i < n; i++) {
-        pq.insert(arreglo[i]);
+    for (int j = inicio; j < fin; j++) {
+        if (arr[j].to_ulong() <= pivote) {
+            i++;
+            std::swap(arr[i], arr[j]);
+        }
     }
+    std::swap(arr[i + 1], arr[fin]);
+    return i + 1;
+}
 
-    // Etapa 2: Extraer elementos en orden
-    for (int i = 0; i < n; i++) {
-        arreglo[i] = pq.extractPriority();
+/**
+ * @brief Implementación recursiva de QuickSort.
+ * 
+ * @param arr Arreglo de bitsets a ordenar.
+ * @param inicio Índice inicial del subarreglo.
+ * @param fin Índice final del subarreglo.
+ */
+void quickSort(std::bitset<32>* arr, int inicio, int fin) {
+    if (inicio < fin) {
+        int pivote = particionar(arr, inicio, fin);
+
+        quickSort(arr, inicio, pivote - 1);
+        quickSort(arr, pivote + 1, fin);
     }
 }
 
@@ -43,7 +58,7 @@ bool esta_ordenado(std::bitset<32>* arr, int n) {
 }
 
 int main() {
-    OpcionesMenu opciones = mostrar_menu("Heap_Sort");
+    OpcionesMenu opciones = mostrar_menu("Quick_Sort");
     int n;
     double tiempo_total = 0;
     std::vector<double> tiempos_individuales;
@@ -56,7 +71,7 @@ int main() {
         }
 
         auto inicio = std::chrono::high_resolution_clock::now();
-        heapSort(arreglo, n);
+        quickSort(arreglo, 0, n - 1);
         auto fin = std::chrono::high_resolution_clock::now();
 
         double duracion = std::chrono::duration_cast<std::chrono::nanoseconds>(fin - inicio).count() * 1e-9;
@@ -70,7 +85,7 @@ int main() {
         delete[] arreglo;
     }
 
-    crear_csv_resultados(opciones.ruta_csv, opciones, tiempos_individuales, tiempo_total, "Heap_Sort");
+    crear_csv_resultados(opciones.ruta_csv, opciones, tiempos_individuales, tiempo_total, "Quick_Sort");
 
     std::cout << "Ordenamiento completado con éxito.\n";
     std::cout << "Resultados guardados en: " << opciones.ruta_csv << "\n";

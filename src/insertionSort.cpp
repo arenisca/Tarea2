@@ -32,7 +32,7 @@ void insertion_sort(std::bitset<32>* arr, int n) {
 }
 
 int main() {
-    OpcionesMenu opciones = mostrar_menu();
+    OpcionesMenu opciones = mostrar_menu("insertion_sort");
     int n;
     double tiempo_total = 0;
     std::vector<double> tiempos_individuales;
@@ -59,7 +59,7 @@ int main() {
         delete[] arreglo;
     }
 
-    crear_csv_resultados(opciones.ruta_csv, opciones, tiempos_individuales, tiempo_total);
+    crear_csv_resultados(opciones.ruta_csv, opciones, tiempos_individuales, tiempo_total, "insertion_sort");
 
     std::cout << "Ordenamiento completado con exito.\n";
     std::cout << "Resultados guardados en: " << opciones.ruta_csv << "\n";
