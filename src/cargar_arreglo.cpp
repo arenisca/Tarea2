@@ -1,4 +1,6 @@
 #include "../include/cargar_arreglo.hpp"
+#include <fstream>
+#include <iostream>
 
 std::bitset<32>* cargar_arreglo(const std::string& fname, int& n) {
     std::ifstream archivo(fname, std::ios::binary);

@@ -1,6 +1,6 @@
 #include "../include/interfaz_menu.hpp"
 
-OpcionesMenu mostrar_menu() {
+OpcionesMenu mostrar_menu(const std::string& nombre_algoritmo) {
     std::string carpeta = "../archivos_de_prueba";
     std::vector<std::string> tamanos = {"5000", "50000", "500000"};
     std::vector<std::string> ordenes = {"asc", "desc", "shuffled"};
@@ -31,13 +31,22 @@ OpcionesMenu mostrar_menu() {
     }
     std::cin >> opcion_ord;
 
-    std::cout << "Ingrese el numero de ejecuciones: ";
+    std::cout << "Ingrese el numero de ejecuciones (maximo 10000): ";
     std::cin >> repeticiones;
+
+    if (repeticiones > 10000) {
+        std::cout << "Se ha alcanzado el máximo permitido (10000 ejecuciones).\n";
+        repeticiones = 10000;
+    } else if (repeticiones <= 0) {
+        std::cout << "El número de ejecuciones debe ser mayor que 0. Usando 1 por defecto.\n";
+        repeticiones = 1;
+    }
 
     // Configurar opciones
     OpcionesMenu opciones;
     opciones.nombre_archivo = carpeta + "/lcp_" + tamanos[opcion_tam - 1] + "_" + ordenes[opcion_ord - 1] + ".bin";
-    opciones.ruta_csv = "../Resultados_CSV/" + tamanos[opcion_tam - 1] + "_" + ordenes[opcion_ord - 1] + "_" + std::to_string(repeticiones) + ".csv";
+    opciones.ruta_csv = "../Resultados_CSV/" + nombre_algoritmo + tamanos[opcion_tam - 1] + "_" + ordenes[opcion_ord - 1] 
+                        + "_" + std::to_string(repeticiones) + "_" + ".csv";
     opciones.repeticiones = repeticiones;
     opciones.tam = tamanos[opcion_tam - 1];
     opciones.ord = ordenes[opcion_ord - 1];

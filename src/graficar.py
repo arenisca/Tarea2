@@ -62,53 +62,48 @@ def select_files(csv_files):
     return selected
 
 def plot_results(selected_files):
-    """Genera gráficos para los archivos seleccionados con el diseño mejorado"""
-    plt.figure(figsize=(14, 8) if len(selected_files) > 1 else (12, 7))
-    
-    colors = plt.cm.tab10.colors
-    single_color = '#1f77b4'
-    
+    """Genera gráficos para los archivos seleccionados con leyendas y metadatos organizados"""
+    plt.figure(figsize=(14, 8))
+
+    base_colors = ['#1f77b4', '#ff7f0e', '#2ca02c']  # Colores base para puntos
+    legend_positions = ['upper left', 'upper center', 'upper right']
+    metadata_positions = [(1.02, 0.98), (1.02, 0.6), (1.02, 0.2)]
+
     ax = plt.gca()
-    
+
     for i, csv_file in enumerate(selected_files):
         data = parse_csv(csv_file)
         tiempos = data.get('Tiempos_individuales', [])
-        
+
         if not tiempos:
             continue
-        
-        color = single_color if len(selected_files) == 1 else colors[i % len(colors)]
+
+        color = base_colors[i]
         label = f"{os.path.basename(csv_file)}"
-        
-        # Graficar puntos más pequeños (tamaño reducido a 50)
-        ax.scatter(range(1, len(tiempos)+1), 
-                 tiempos,
-                 color=color,
-                 s=30,  # tamaño de los puntos
-                 alpha=0.8,
-                 label=label)
-        
-        # Líneas de referencia
+
+        # Gráfico de puntos
+        ax.scatter(range(1, len(tiempos) + 1),
+                   tiempos,
+                   color=color,
+                   s=30,
+                   alpha=0.8,
+                   label=label)
+
+        # Colores únicos por archivo para líneas guía
+        color_avg = color  # mismo que los puntos
+
+        # Líneas de guía
         avg_time = float(data.get('Tiempo promedio', '0').replace('s', ''))
         min_time = data.get('Tiempo_min', avg_time)
         max_time = data.get('Tiempo_max', avg_time)
-        
-        # Estilos de líneas
-        ax.axhline(y=avg_time, color="green", linestyle='--', alpha=0.5)
-        ax.axhline(y=min_time, color="purple", linestyle=':', alpha=0.5)
-        ax.axhline(y=max_time, color="orange", linestyle='-.', alpha=0.5)
 
-    # Configuración del gráfico principal
-    ax.set_title('Tiempos de Ejecución Individuales' + 
-               (' (Comparación)' if len(selected_files) > 1 else ''))
-    ax.set_xlabel('Número de Ejecución')
-    ax.set_ylabel('Tiempo (segundos)')
-    ax.grid(True, alpha=0.3)
-    
-    # CUADRO DE METADATOS AHORA FUERA DEL GRÁFICO (derecha)
-    if len(selected_files) == 1:
-        data = parse_csv(selected_files[0])
+        ax.axhline(y=avg_time, color=color_avg, linestyle='--', alpha=0.8)
+        ax.axhline(y=min_time, color=color_avg, linestyle=':', alpha=0.8)
+        ax.axhline(y=max_time, color=color_avg, linestyle='-.', alpha=0.8)
+
+        # Cuadro de metadatos
         metadata = [
+            f"Archivo: {os.path.basename(csv_file)}",
             f"Algoritmo: {data.get('Algoritmo', 'N/A')}",
             f"Tamaño: {data.get('Tamaño', 'N/A')}",
             f"Orden: {data.get('Orden', 'N/A')}",
@@ -117,42 +112,40 @@ def plot_results(selected_files):
             f"Tiempo total: {data.get('Tiempo total', 'N/A')}",
         ]
         plt.annotate('\n'.join(metadata),
-                    xy=(1.02, 0.98),  # Posición fuera del gráfico
-                    xycoords='axes fraction',
-                    fontsize=10,
-                    ha='left',
-                    va='top',
-                    bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
-    
-    # LEYENDA AHORA DENTRO DEL GRÁFICO (esquina superior izquierda)
-    if len(selected_files) == 1:
-        data = parse_csv(selected_files[0])
-        avg_time = float(data.get('Tiempo promedio', '0').replace('s', ''))
-        min_time = data.get('Tiempo_min', avg_time)
-        max_time = data.get('Tiempo_max', avg_time)
-        
-        # Crear elementos personalizados para la leyenda
+                     xy=metadata_positions[i],
+                     xycoords='axes fraction',
+                     fontsize=9,
+                     ha='left',
+                     va='top',
+                     bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+
+        # Leyenda individual para cada archivo
         legend_elements = [
-            Line2D([0], [0], marker='o', color='w', label=f"Ejecuciones ({len(data['Tiempos_individuales'])})",
-                  markerfacecolor=single_color, markersize=8),
-            Line2D([0], [0], color='green', linestyle='--', lw=1, label=f'Promedio: {avg_time:.6f}s'),
-            Line2D([0], [0], color='purple', linestyle=':', lw=1, label=f'Mínimo: {min_time:.6f}s'),
-            Line2D([0], [0], color='orange', linestyle='-.', lw=1, label=f'Máximo: {max_time:.6f}s')
+            Line2D([0], [0], marker='o', color='w',
+                   label=f"Ejecuciones ({len(tiempos)})",
+                   markerfacecolor=color, markersize=8),
+            Line2D([0], [0], color=color_avg, linestyle='--', lw=1,
+                   label=f'Promedio: {avg_time:.6f}s'),
+            Line2D([0], [0], color=color_avg, linestyle=':', lw=1,
+                   label=f'Mínimo: {min_time:.6f}s'),
+            Line2D([0], [0], color=color_avg, linestyle='-.', lw=1,
+                   label=f'Máximo: {max_time:.6f}s')
         ]
-        
-        ax.legend(handles=legend_elements,
-                 bbox_to_anchor=(0.02, 0.98),  # Posición dentro del gráfico
-                 loc='upper left',
-                 borderaxespad=0.,
-                 framealpha=0.8)
-    else:
-        ax.legend(bbox_to_anchor=(0.02, 0.98),  # Posición dentro del gráfico
-                 loc='upper left',
-                 borderaxespad=0.,
-                 framealpha=0.8)
-    
+
+        legend = ax.legend(handles=legend_elements,
+                           loc=legend_positions[i],
+                           framealpha=0.8,
+                           title=os.path.basename(csv_file))
+        ax.add_artist(legend)
+
+    # Configuración general
+    ax.set_title('Tiempos de Ejecución Individuales' +
+                 (' (Comparación)' if len(selected_files) > 1 else ''))
+    ax.set_xlabel('Número de Ejecución')
+    ax.set_ylabel('Tiempo (segundos)')
+    ax.grid(True, alpha=0.3)
+
     plt.tight_layout()
-    
     output_file = 'grafico_tiempos.png'
     plt.savefig(output_file, dpi=300, bbox_inches='tight')
     print(f"\nGráfico guardado como: {output_file}")
