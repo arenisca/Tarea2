@@ -4,6 +4,13 @@ import os
 import glob
 from matplotlib.lines import Line2D
 
+# === Comandos para ejecutar este script ===
+# Ejecutar en la terminal:
+#   python graficar.py
+# o alternativamente:
+#   python3 graficar.py
+
+
 def parse_csv(file_path):
     """Parsea el archivo CSV especial con estructura de secciones"""
     data = {}
@@ -47,7 +54,6 @@ def select_files(csv_files):
     
     while True:
         print("\nSeleccione los archivos a graficar (Máximo 3) (ej. 1,3 o 1-3 o 1,2,3):")
-        print("Ingrese 'todos' para seleccionar todos los archivos")
         selection = input("> ").strip().lower()
         
         # Caso especial: todos
