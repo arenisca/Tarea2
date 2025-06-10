@@ -1,0 +1,28 @@
+Algoritmo;Merge_Sort
+Tamaño;5000000
+Orden;desc
+Repeticiones;20
+Máquina;Vale
+Tiempo total;28.3795s
+Tiempo promedio;1.41897s
+Tiempos individuales (s):
+Ejecución 1;1.54664
+Ejecución 2;1.44606
+Ejecución 3;1.41886
+Ejecución 4;1.39518
+Ejecución 5;1.45914
+Ejecución 6;1.40027
+Ejecución 7;1.37941
+Ejecución 8;1.4074
+Ejecución 9;1.40708
+Ejecución 10;1.40832
+Ejecución 11;1.42278
+Ejecución 12;1.40244
+Ejecución 13;1.38939
+Ejecución 14;1.38714
+Ejecución 15;1.38378
+Ejecución 16;1.42004
+Ejecución 17;1.40193
+Ejecución 18;1.49984
+Ejecución 19;1.40822
+Ejecución 20;1.39554

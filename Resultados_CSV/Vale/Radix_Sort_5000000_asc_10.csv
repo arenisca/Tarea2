@@ -1,0 +1,18 @@
+Algoritmo;Radix_Sort
+Tamaño;5000000
+Orden;asc
+Repeticiones;10
+Máquina;Vale
+Tiempo total;4.20433s
+Tiempo promedio;0.420433s
+Tiempos individuales (s):
+Ejecución 1;0.422825
+Ejecución 2;0.419896
+Ejecución 3;0.421783
+Ejecución 4;0.421257
+Ejecución 5;0.426642
+Ejecución 6;0.424698
+Ejecución 7;0.422264
+Ejecución 8;0.420633
+Ejecución 9;0.413717
+Ejecución 10;0.410612
