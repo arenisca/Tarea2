@@ -1,0 +1,28 @@
+Algoritmo;insertion_sort
+Tamaño;5000
+Orden;asc
+Repeticiones;20
+Máquina;Vale
+Tiempo total;0.390603s
+Tiempo promedio;0.0195301s
+Tiempos individuales (s):
+Ejecución 1;0.0217219
+Ejecución 2;0.0204739
+Ejecución 3;0.0199117
+Ejecución 4;0.020122
+Ejecución 5;0.0200051
+Ejecución 6;0.019974
+Ejecución 7;0.0201554
+Ejecución 8;0.0200271
+Ejecución 9;0.0200109
+Ejecución 10;0.0197899
+Ejecución 11;0.0195174
+Ejecución 12;0.0188679
+Ejecución 13;0.0189441
+Ejecución 14;0.0188326
+Ejecución 15;0.0184582
+Ejecución 16;0.0184752
+Ejecución 17;0.0185167
+Ejecución 18;0.0194167
+Ejecución 19;0.0184668
+Ejecución 20;0.0189153
