@@ -1,0 +1,18 @@
+Algoritmo;Heap_Sort
+Tamaño;5000000
+Orden;asc
+Repeticiones;10
+Máquina;Vale
+Tiempo total;44.3809s
+Tiempo promedio;4.43809s
+Tiempos individuales (s):
+Ejecución 1;4.58679
+Ejecución 2;4.40774
+Ejecución 3;4.4289
+Ejecución 4;4.38926
+Ejecución 5;4.36546
+Ejecución 6;4.44088
+Ejecución 7;4.48235
+Ejecución 8;4.50146
+Ejecución 9;4.35273
+Ejecución 10;4.4253
